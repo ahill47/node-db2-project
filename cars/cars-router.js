@@ -23,5 +23,26 @@ router.get("/:id", async(req,res,next)=>{
     }
 
 })
+router.post("/", async (req, res, next) => {
+	try {
+		const carData = req.body
+		const [id] = await db("cars").insert(carData)
+		const newcar = await db("cars").where({ id })
+
+		res.status(201).json(newcar)
+	} catch(err) {
+		next(err)
+	}
+})//working
+router.delete("/:id", async (req, res, next) => {
+    try {
+        await db("cars").where("id", req.params.id).del()
+        console.log("Car is deleted")
+        res.status(204).end()
+    } catch (err) {
+        next(err)
+    }
+
+})
 
 module.exports = router
